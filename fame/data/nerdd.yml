@@ -1,0 +1,148 @@
+module:
+  rank: 3
+  name: fame3
+  visible_name: FAME 3
+  logo: !image logo.png
+  logo_title: Sites of Metabolism
+  logo_caption: Regioselectivity prediction for phase 1 and phase 2 metabolism
+  example_smiles: CN1CCN(Cc2ccc(cc2)C(=O)Nc3ccc(C)c(Nc4nccc(n4)c5cccnc5)c3)CC1 (imatinib)
+
+  title: Prediction of Phase 1 and Phase 2 Sites of Metabolism (SoMs)
+  description: |
+    FAME 3 is a collection of machine learning models for prediction of both phase 1 and
+    phase 2 sites of metabolism (SoMs). SoMs are atoms where a metabolic reaction gets
+    initiated and, thus, are a good starting point for determining the metabolic fate of
+    xenobiotic compounds.
+
+    FAME 3 was developed in collaboration with Dr. Angelica Mazzolari, Prof. Alessandro
+    Pedretti and Prof. Giulio Vistoli from the Drug Design Laboratory of the University
+    of Milan and em. Prof. Bernard Testa from the University of Lausanne.
+
+    FAME 3 is free for non-commercial and academic research. For-profit institutions may
+    use FAME 3 for testing purposes and contact us for a commercial licence.
+
+  partners:
+    - name: University of Vienna
+      logo: !image logo_vienna.gif
+      url: https://www.univie.ac.at/en
+    - name: Università degli Studi di Milano
+      logo: !image logo_milan.png
+      url: https://www.unimi.it/en
+    - name: University of Chemistry and Technology Prague
+      logo: !image logo_prague.png
+      url: https://www.vscht.cz/en
+    - name: University of Hamburg
+      logo: !image logo_hamburg.gif
+      url: https://www.uni-hamburg.de/en
+
+  citations: 
+    - |
+      Šícho, M.; Stork, C.; Mazzolari, A.; de Bruyn Kops, C.; Pedretti, A.; Testa, B.;
+      Vistoli, G.; Svozil, D.; Kirchmair, J. FAME 3: Predicting the Sites of Metabolism
+      in Synthetic Compounds and Natural Products for Phase 1 and Phase 2 Metabolic
+      Enzymes. J. Chem. Inf. Model. 2019.<br> [doi: doi:
+      10.1021/acs.jcim.9b00376](https://doi.org/doi: 10.1021/acs.jcim.9b00376)
+
+  contact:
+    - name: Martin Šícho
+      email: sicho@vscht.cz
+    - name: Johannes Kirchmair
+      email: johannes.kirchmair@univie.ac.at
+
+  about: |
+    ## FAME 3: Phase I and Phase II Site of Metabolism Prediction
+
+    Metabolism of xenobiotics plays a crucial role in safety and efficacy of not only
+    drugs, but also cosmetics or agrochemicals. However, even despite significant
+    advances in analytical methods, experimental determination of metabolites still
+    remains a labour-intensive and costly endeavor. Therefore, the prospect of an
+    accurate and fast computational method for prediction of human metabolism is very
+    attractive. FAME 3 represents a humble step in this direction by providing
+    predictions of the so called sites of metabolism (SoMs). SoMs are atoms where a
+    reaction catalyzed by a metabolic enzyme is initiated and, thus, their
+    identification is useful in determining the metabolic fate of a compound. It can
+    also serve as the first step in the direct prediction of formed metabolites (see
+    [GLORY](https://nerdd.univie.ac.at/glory/about/)).
+
+    ### About FAME 3
+
+    FAME 3 is the third generation of the [FAst
+    MEtabolizer](https://pubs.acs.org/doi/10.1021/ci400503s) program developed for the
+    prediction of SoMs. [FAME 2](https://pubs.acs.org/doi/full/10.1021/acs.jcim.7b00250)
+    featured an improved machine learning methodology, but was only limited to a handful
+    of cytochrome P450 (CYPs) isoforms.
+
+    FAME 3 uses the improved methodology of FAME 2 and applies it to a new data set that
+    extends not only beyond CYPs in phase I transformations, but also includes data on
+    many phase II reactions as well. The FAME 3 program uses a set of extra trees models
+    that are trained on the [MetaQSAR
+    database](https://pubs.acs.org/doi/full/10.1021/acs.jmedchem.7b01473), which is a
+    large expert-curated database of metabolic transformations relating to both phase I
+    and phase II metabolic enzymes. With data on more than 5,000 phase I SoMs and 1,200
+    phase II SoMs, this is a significant enhancement when compared to FAME 2.
+
+    In addition to FAME 2, FAME 3 also features an applicability domain measure (called
+    FAMEscore), which evaluates how similar the environment of an atom is to the
+    environments in the training set of the model. FAMEscore correlates with model
+    performance and, thus, informs the program user about the likely accuracy of each
+    prediction.
+
+    ### Using the FAME 3 webserver
+
+    #### Submitting Calculations
+
+    Enter SMILES, draw a molecule, or upload a file (.smi or .sdf) containing up to 1000
+    molecules. Click submit to start the calculation. You will then be forwarded to the
+    result page.
+
+    #### Collecting results
+
+    The FAME 3 output for each submitted substrate is displayed on the results page
+    after the calculation finishes (for about 50 molecules of average size, this should
+    be within a few minutes). You can use the accordion buttons to display the
+    prediction page for each submitted molecule one by one. The prediction page contains
+    the structure of the substrate and a table with the predictions.
+
+    Each atom is assigned a unique ID within the molecule (the "Atom column"), which is
+    also displayed at the corresponding atom position in the structure upon hovering
+    over it with a mouse. The table is sorted according to the SoM probability assigned
+    by the model (the "Probability" column) and the SoMs past the decision threshold of
+    the model are also highlighted with yellow color. The FAMEscore value is shown in
+    the last column of the table. Usually, FAMEscore values higher than 0.6 indicate
+    that the prediction should be well supported by the model, but in some cases the
+    model was found to perform well even if FAMEscore was lower (see the FAME 3 paper
+    for further discussion).
+
+  job_parameters:
+    - name: metabolism_phase
+      verbose_name: Metabolism phase
+      type: text
+      choices: 
+        - value: phase_1_and_2
+          label: Phase 1 and phase 2 metabolism
+        - value: phase_1
+          label: Phase 1 metabolism
+        - value: phase_2
+          label: Phase 2 metabolism
+      default: phase_1_and_2
+
+  result_properties:
+    - name: atom
+      verbose_name: Atom
+      type: text
+      sortable: True
+      level: atom
+    - name: probability_1
+      verbose_name: Probability
+      type: float
+      sortable: True
+      level: atom
+      palette: fameOrange
+      format: .2f
+    - name: ad_score
+      verbose_name: Fame score
+      type: float
+      sortable: True
+      level: atom
+      format: .2f
+    

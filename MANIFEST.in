@@ -1,0 +1,4 @@
+include fame/fame3-server-0.0.0.dev7_server9.jar.part*
+include fame/fame3
+recursive-include fame/data *
+recursive-include fame/libs *
