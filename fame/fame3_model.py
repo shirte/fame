@@ -4,8 +4,7 @@ from tempfile import TemporaryDirectory
 from typing import List
 
 import pandas as pd
-from nerdd_module import AbstractModel
-from nerdd_module.problem import Problem
+from nerdd_module import Problem, SimpleModel
 from rdkit.Chem import AddHs, Mol, MolToSmiles, SanitizeMol
 from sh import Command
 
@@ -24,12 +23,12 @@ fame3 = Command(get_fame3_executable()).bake(r=1, c=True)
 
 default_columns = [
     "mol_id",
-    "atom_id",
     "atom",
+    "atom_id",
     "is_som",
+    "ad_score",
     "probability_0",
     "probability_1",
-    "ad_score",
 ]
 
 
@@ -70,7 +69,7 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
                 ]
             )
         else:
-            df = pd.DataFrame(columns=default_columns)
+            return []
 
         # cleaning the results
         if len(df) > 0:
@@ -88,11 +87,6 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
             df["atom_id"] = df.atom.map(lambda x: x.split(".")[1]).map(int) - 1
             df["mol_id"] = df["molecule"].map(lambda s: s[len("mol_") :]).map(int) - 1
 
-            # fame uses new mol ids, but we want to use the original mol ids
-            original_mol_ids = [int(m.GetProp("_Name")) for m in mols]
-            mapping = dict(zip(range(len(original_mol_ids)), original_mol_ids))
-            df["mol_id"] = df["mol_id"].map(mapping)
-
             # round all numbers to 3 decimal places
             for col in ["probability_0", "probability_1", "ad_score"]:
                 df[col] = df[col].round(3)
@@ -108,12 +102,12 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
         df.probability_0 = df.probability_0.astype(float)
         df.probability_1 = df.probability_1.astype(float)
 
-        return df
+        return df.to_dict(orient="records")
 
 
-class Fame3Model(AbstractModel):
+class Fame3Model(SimpleModel):
     def __init__(self):
-        super().__init__(preprocessing_pipeline="custom")
+        super().__init__(preprocessing_steps=[])
 
     def _preprocess_single_mol(self, mol: Mol):
         SanitizeMol(mol)
@@ -121,8 +115,8 @@ class Fame3Model(AbstractModel):
         return mol, []
 
     def _predict_mols(
-        self, mols: List[Mol], metabolism_phase="phase_1_and_2"
-    ) -> pd.DataFrame:
+        self, mols: List[Mol], metabolism_phase:str="phase_1_and_2"
+    ) -> List[dict]:
         assert metabolism_phase in ["phase_1_and_2", "phase_1", "phase_2"]
         if metabolism_phase == "phase_1_and_2":
             metabolism_phase = "P1+P2"
