@@ -115,7 +115,7 @@ module:
 
   job_parameters:
     - name: metabolism_phase
-      verbose_name: Metabolism phase
+      visible_name: Metabolism phase
       type: text
       choices: 
         - value: phase_1_and_2
@@ -128,19 +128,31 @@ module:
 
   result_properties:
     - name: atom
-      verbose_name: Atom
-      type: text
+      visible_name: Atom
+      type: integer
       sortable: True
       level: atom
-    - name: probability_1
-      verbose_name: Probability
+    - name: probability_0
+      visible_name: Probability
       type: float
       sortable: True
       level: atom
       palette: fameOrange
       format: .2f
+    - name: probability_1
+      visible_name: Probability
+      type: float
+      sortable: True
+      level: atom
+      palette: fameOrange
+      format: .2f
+    - name: is_som
+      visible_name: SOM
+      type: bool
+      sortable: True
+      level: atom    
     - name: ad_score
-      verbose_name: Fame score
+      visible_name: Fame score
       type: float
       sortable: True
       level: atom

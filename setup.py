@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="fame",
-    version="3.0.0",
+    version="3.1.0",
     maintainer="Johannes Kirchmair",
     maintainer_email="johannes.kirchmair@univie.ac.at",
     packages=find_packages(),
@@ -15,7 +15,7 @@ setup(
     install_requires=[
         "pandas~=1.2.1",
         "sh~=1.14.3",
-        "nerdd-module>=0.1.9",
+        "nerdd-module>=0.3.4",
         "platformdirs>=4",
         # install importlib-resources and importlib_metadata for old Python versions
         "importlib-resources>=5; python_version<'3.9'",
@@ -24,8 +24,7 @@ setup(
     extras_require={
         "dev": [
             "mypy",
-            "isort",
-            "black",
+            "ruff"
         ],
         "test": [
             "pytest",

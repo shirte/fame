@@ -1,9 +1,9 @@
-from pytest_bdd import given, parsers
+from pytest_bdd import given, parsers, when
 
 from fame import Fame3Model
 
 
-@given("the Fame model", target_fixture="model")
+@given("the Fame model", target_fixture="predictor")
 def model():
     return Fame3Model()
 
@@ -19,3 +19,15 @@ def input_type(input_type):
 )
 def metabolism_phase(metabolism_phase):
     return metabolism_phase
+
+@when(
+    parsers.parse("the model generates predictions for the molecule representations"),
+    target_fixture="predictions",
+)
+def predictions(representations, predictor, input_type, metabolism_phase):
+    return predictor.predict(
+        representations,
+        input_type=input_type,
+        metabolism_phase=metabolism_phase,
+        output_format="record_list",
+    )
