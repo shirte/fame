@@ -2,7 +2,7 @@ module:
   rank: 3
   name: fame3
   visible_name: FAME 3
-  logo: !image logo.png
+  logo: !image logo.svg
   logo_title: Sites of Metabolism
   logo_caption: Regioselectivity prediction for phase 1 and phase 2 metabolism
   example_smiles: CN1CCN(Cc2ccc(cc2)C(=O)Nc3ccc(C)c(Nc4nccc(n4)c5cccnc5)c3)CC1 (imatinib)
