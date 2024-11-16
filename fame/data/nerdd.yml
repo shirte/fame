@@ -35,19 +35,34 @@ module:
       logo: !image logo_hamburg.gif
       url: https://www.uni-hamburg.de/en
 
-  citations: 
-    - |
-      Šícho, M.; Stork, C.; Mazzolari, A.; de Bruyn Kops, C.; Pedretti, A.; Testa, B.;
-      Vistoli, G.; Svozil, D.; Kirchmair, J. FAME 3: Predicting the Sites of Metabolism
-      in Synthetic Compounds and Natural Products for Phase 1 and Phase 2 Metabolic
-      Enzymes. J. Chem. Inf. Model. 2019.<br> [doi: doi:
-      10.1021/acs.jcim.9b00376](https://doi.org/doi: 10.1021/acs.jcim.9b00376)
-
-  contact:
-    - name: Martin Šícho
-      email: sicho@vscht.cz
-    - name: Johannes Kirchmair
-      email: johannes.kirchmair@univie.ac.at
+  publications: 
+    - title: |
+        FAME 3: Predicting the Sites of Metabolism in Synthetic Compounds and Natural 
+        Products for Phase 1 and Phase 2 Metabolic Enzymes
+      authors:
+        - first_name: Martin
+          last_name: Šícho
+          email: sicho@vscht.cz
+        - first_name: Conrad
+          last_name: Stork
+        - first_name: Angelica
+          last_name: Mazzolari
+        - first_name: Christina
+          last_name: de Bruyn Kops
+        - first_name: Alessandro
+          last_name: Pedretti
+        - first_name: Bernard
+          last_name: Testa
+        - first_name: Giulio
+          last_name: Vistoli
+        - first_name: Daniel
+          last_name: Svozil
+        - first_name: Johannes
+          last_name: Kirchmair
+          email: johannes.kirchmair@univie.ac.at
+      journal: J. Chem. Inf. Model
+      year: 2019
+      doi: 10.1021/acs.jcim.9b00376
 
   about: |
     ## FAME 3: Phase I and Phase II Site of Metabolism Prediction
@@ -116,7 +131,7 @@ module:
   job_parameters:
     - name: metabolism_phase
       visible_name: Metabolism phase
-      type: text
+      type: string
       choices: 
         - value: phase_1_and_2
           label: Phase 1 and phase 2 metabolism
