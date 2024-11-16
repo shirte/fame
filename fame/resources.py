@@ -8,6 +8,7 @@ __all__ = ["get_fame3_executable"]
 
 here = os.path.dirname(__file__)
 
+
 def merge_file(filename, output):
     parts = sorted(glob(f"{filename}.part*"))
 
@@ -15,6 +16,7 @@ def merge_file(filename, output):
         for part in parts:
             with open(part, "rb") as p:
                 f.write(p.read())
+
 
 def setup_file(filename, sub_dir=None):
     # install fame3 in the user data directory if necessary
@@ -33,6 +35,7 @@ def setup_file(filename, sub_dir=None):
 
     return target_filename
 
+
 def get_fame3_executable():
     # copy the fame3 executable to the user data directory
     fame3_executable_name = os.path.join(here, "fame3")
@@ -44,6 +47,3 @@ def get_fame3_executable():
 
     setup_file(fame3_jar_name)
     return setup_file(fame3_executable_name)
-
-
-

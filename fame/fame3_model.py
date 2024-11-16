@@ -37,9 +37,12 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
         output_dir = os.path.join(tmp_dir, "output")
 
         # We use the smiles format as input for Fame3.
-        # In order to be consistent with the original implementation, SMILES have to be 
+        # In order to be consistent with the original implementation, SMILES have to be
         # kekulized and all hydrogens have to be explicit.
-        input_smiles = [MolToSmiles(m, canonical=False, allHsExplicit=True, kekuleSmiles=True) for m in mols]
+        input_smiles = [
+            MolToSmiles(m, canonical=False, allHsExplicit=True, kekuleSmiles=True)
+            for m in mols
+        ]
 
         # execute Fame3 on the list of smiles
         fame3("-s", *input_smiles, o=output_dir, m=mode)
@@ -115,7 +118,7 @@ class Fame3Model(SimpleModel):
         return mol, []
 
     def _predict_mols(
-        self, mols: List[Mol], metabolism_phase:str="phase_1_and_2"
+        self, mols: List[Mol], metabolism_phase: str = "phase_1_and_2"
     ) -> List[dict]:
         assert metabolism_phase in ["phase_1_and_2", "phase_1", "phase_2"]
         if metabolism_phase == "phase_1_and_2":

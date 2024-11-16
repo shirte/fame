@@ -22,10 +22,7 @@ setup(
         "importlib_metadata>=4.6; python_version<'3.10'",
     ],
     extras_require={
-        "dev": [
-            "mypy",
-            "ruff"
-        ],
+        "dev": ["mypy", "ruff"],
         "test": [
             "pytest",
             "pytest-watch",

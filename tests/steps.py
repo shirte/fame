@@ -20,6 +20,7 @@ def input_type(input_type):
 def metabolism_phase(metabolism_phase):
     return metabolism_phase
 
+
 @when(
     parsers.parse("the model generates predictions for the molecule representations"),
     target_fixture="predictions",
