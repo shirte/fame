@@ -4,7 +4,7 @@ from tempfile import TemporaryDirectory
 from typing import List
 
 import pandas as pd
-from nerdd_module import Problem, SimpleModel
+from nerdd_module import SimpleModel
 from rdkit.Chem import AddHs, Mol, MolToSmiles, SanitizeMol
 from sh import Command
 
@@ -18,7 +18,7 @@ __all__ = ["Fame3Model"]
 # wrap FAME3 binary as a Python function
 # r=4: number of processes
 # c=True: output csv
-fame3 = Command(get_fame3_executable()).bake(r=1, c=True)
+fame3 = Command(get_fame3_executable()).bake(r=2, c=True)
 
 
 default_columns = [
