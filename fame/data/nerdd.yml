@@ -6,6 +6,7 @@ module:
   logo_title: Sites of Metabolism
   logo_caption: Regioselectivity prediction for phase 1 and phase 2 metabolism
   example_smiles: CN1CCN(Cc2ccc(cc2)C(=O)Nc3ccc(C)c(Nc4nccc(n4)c5cccnc5)c3)CC1 (imatinib)
+  batch_size: 10
 
   title: Prediction of Phase 1 and Phase 2 Sites of Metabolism (SoMs)
   description: |
@@ -35,7 +36,7 @@ module:
       logo: !image logo_hamburg.gif
       url: https://www.uni-hamburg.de/en
 
-  publications: 
+  publications:
     - title: |
         FAME 3: Predicting the Sites of Metabolism in Synthetic Compounds and Natural 
         Products for Phase 1 and Phase 2 Metabolic Enzymes
@@ -132,7 +133,7 @@ module:
     - name: metabolism_phase
       visible_name: Metabolism phase
       type: string
-      choices: 
+      choices:
         - value: phase_1_and_2
           label: Phase 1 and phase 2 metabolism
         - value: phase_1
@@ -144,7 +145,7 @@ module:
   result_properties:
     - name: atom
       visible_name: Atom
-      type: integer
+      type: string
       sortable: True
       level: atom
     - name: probability_0
@@ -155,7 +156,8 @@ module:
       palette: fameOrange
       format: .2f
     - name: probability_1
-      visible_name: Probability
+      visible_name: 1-Probability
+      visible: False
       type: float
       sortable: True
       level: atom
@@ -165,11 +167,10 @@ module:
       visible_name: SOM
       type: bool
       sortable: True
-      level: atom    
+      level: atom
     - name: ad_score
       visible_name: Fame score
       type: float
       sortable: True
       level: atom
       format: .2f
-    
