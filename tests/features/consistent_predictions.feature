@@ -2,7 +2,6 @@ Feature: Consistent predictions
 
   Scenario Outline: Predictions stay consistent with previous versions
     Given an input molecule specified by '<input_smiles>'
-    And the input type is 'smiles'
     And the Fame model
     And the metabolism phase is '<metabolism_phase>'
     
