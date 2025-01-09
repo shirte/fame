@@ -112,7 +112,7 @@ class Fame3Model(SimpleModel):
     def __init__(self):
         super().__init__(preprocessing_steps=[])
 
-    def _preprocess_single_mol(self, mol: Mol):
+    def _preprocess(self, mol: Mol):
         SanitizeMol(mol)
         mol = AddHs(mol, explicitOnly=True)
         return mol, []
