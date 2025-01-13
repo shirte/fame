@@ -5,7 +5,7 @@ from typing import List
 
 import pandas as pd
 from nerdd_module import SimpleModel
-from rdkit.Chem import AddHs, Mol, MolToSmiles, SanitizeMol
+from rdkit.Chem import Kekulize, Mol, MolFromSmiles, MolToSmiles, SanitizeMol
 from sh import Command
 
 from .resources import get_fame3_executable
@@ -16,9 +16,9 @@ __all__ = ["Fame3Model"]
 # mode: one of ['P1', 'P1+P2', 'P2']
 
 # wrap FAME3 binary as a Python function
-# r=4: number of processes
+# r=4: number of processes (note: I suspect that Fame ignores this parameter)
 # c=True: output csv
-fame3 = Command(get_fame3_executable()).bake(r=2, c=True)
+fame3 = Command(get_fame3_executable()).bake(r=4, c=True)
 
 
 default_columns = [
@@ -36,9 +36,11 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
     with TemporaryDirectory() as tmp_dir:
         output_dir = os.path.join(tmp_dir, "output")
 
-        # We use the smiles format as input for Fame3.
-        # In order to be consistent with the original implementation, SMILES have to be
-        # kekulized and all hydrogens have to be explicit.
+        # Note 1: For simplicity, we always provide the input for Fame3 in SMILES format (even if
+        #         the input was given as a mol block / sdf).
+        # Note 2: In order to be consistent with the original implementation, SMILES have to be
+        #         kekulized and all hydrogens have to be explicit. This changes the atom indices
+        #         and we have to map the results back to the original atom indices (see below).
         input_smiles = [
             MolToSmiles(m, canonical=False, allHsExplicit=True, kekuleSmiles=True)
             for m in mols
@@ -94,6 +96,41 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
             for col in ["probability_0", "probability_1", "ad_score"]:
                 df[col] = df[col].round(3)
 
+            # Create the mapping that maps atom indices in the manipulated molecules (given as
+            # "input_smiles" to Fame; has hydrogens; is kekulized) to the atom indices in the
+            # original molecules (given as "mols" to this method).
+            mapping = {}
+            for i, mol, input_smi in zip(range(len(mols)), mols, input_smiles):
+                # Copy the molecule to avoid changes in the original molecule.
+                preprocessed_mol = Mol(mol)
+
+                # Kekulize the original molecule in order to make the graph matching algorithm find
+                # a match. Note that this doesn't change atom indices.
+                Kekulize(preprocessed_mol)
+
+                # Get the manipulated molecule and keep it kekulized (sanitize=False).
+                fame_mol = MolFromSmiles(input_smi, sanitize=False)
+
+                # Use the graph matching algorithm to find the atom mapping. The mapping is a tuple
+                # of atom indices. When index j maps to number k, then atom j in fame_mol is atom k
+                # in the original mol.
+                match = preprocessed_mol.GetSubstructMatch(fame_mol)
+
+                # Make sure that all heavy atoms are matched.
+                assert len(match) == preprocessed_mol.GetNumAtoms()
+
+                # The expression mapping[m][i] maps atom i in fame_mol m to the corresponding atom
+                # in the original mol.
+                mapping[i] = match
+
+            # apply the mapping
+            df["atom_id"] = df.apply(
+                lambda row: mapping[row["mol_id"]][row["atom_id"]], axis=1
+            )
+            df["atom"] = df.apply(
+                lambda row: f"{row['atom'].split('.')[0]}.{row['atom_id']}", axis=1
+            )
+
             # filter and reorder columns
             df = df[default_columns]
         else:
@@ -114,7 +151,6 @@ class Fame3Model(SimpleModel):
 
     def _preprocess(self, mol: Mol):
         SanitizeMol(mol)
-        mol = AddHs(mol, explicitOnly=True)
         return mol, []
 
     def _predict_mols(
