@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="fame",
-    version="3.1.0",
+    version="3.1.1",
     maintainer="Johannes Kirchmair",
     maintainer_email="johannes.kirchmair@univie.ac.at",
     packages=find_packages(),
@@ -27,7 +27,7 @@ setup(
             "pytest",
             "pytest-watch",
             "pytest-cov",
-            "pytest-bdd",
+            "pytest-bdd==7.3.0",
             "hypothesis",
             "hypothesis-rdkit",
         ],
