@@ -1,3 +1,4 @@
+import logging
 import os
 from glob import glob
 from tempfile import TemporaryDirectory
@@ -5,12 +6,14 @@ from typing import List
 
 import pandas as pd
 from nerdd_module import SimpleModel
-from rdkit.Chem import Kekulize, Mol, MolFromSmiles, MolToSmiles, SanitizeMol
+from rdkit.Chem import Mol, MolFromSmiles, MolToSmiles, SanitizeMol, SmilesParserParams
 from sh import Command
 
 from .resources import get_fame3_executable
 
 __all__ = ["Fame3Model"]
+
+logger = logging.getLogger(__name__)
 
 # Predicts the site of metabolism for a given molecule or a set of molecules.
 # mode: one of ['P1', 'P1+P2', 'P2']
@@ -101,27 +104,32 @@ def predict_mols(mols: List[Mol], mode="P1+P2"):
             # original molecules (given as "mols" to this method).
             mapping = {}
             for i, mol, input_smi in zip(range(len(mols)), mols, input_smiles):
-                # Copy the molecule to avoid changes in the original molecule.
-                preprocessed_mol = Mol(mol)
+                # If finding an alignment fails, we keep the original atom indices.
+                try:
+                    # Copy the molecule to avoid changes in the original molecule (GetSubstructMatch
+                    # changes marked atoms inplace).
+                    preprocessed_mol = Mol(mol)
 
-                # Kekulize the original molecule in order to make the graph matching algorithm find
-                # a match. Note that this doesn't change atom indices.
-                Kekulize(preprocessed_mol)
+                    # Get the manipulated molecule and keep the hydrogens (removeHs=False).
+                    params = SmilesParserParams()
+                    params.removeHs = False
+                    params.sanitize = True
+                    fame_mol = MolFromSmiles(input_smi, params)
 
-                # Get the manipulated molecule and keep it kekulized (sanitize=False).
-                fame_mol = MolFromSmiles(input_smi, sanitize=False)
+                    # Use the graph matching algorithm to find the atom mapping. The mapping is a tuple
+                    # of atom indices. When index j maps to number k, then atom j in fame_mol is atom k
+                    # in the original mol.
+                    match = preprocessed_mol.GetSubstructMatch(fame_mol)
 
-                # Use the graph matching algorithm to find the atom mapping. The mapping is a tuple
-                # of atom indices. When index j maps to number k, then atom j in fame_mol is atom k
-                # in the original mol.
-                match = preprocessed_mol.GetSubstructMatch(fame_mol)
+                    # Make sure that all heavy atoms are matched.
+                    assert len(match) == preprocessed_mol.GetNumAtoms()
 
-                # Make sure that all heavy atoms are matched.
-                assert len(match) == preprocessed_mol.GetNumAtoms()
-
-                # The expression mapping[m][i] maps atom i in fame_mol m to the corresponding atom
-                # in the original mol.
-                mapping[i] = match
+                    # The expression mapping[m][i] maps atom i in fame_mol m to the corresponding atom
+                    # in the original mol.
+                    mapping[i] = match
+                except Exception as e:
+                    logger.error(e)
+                    mapping[i] = list(range(mol.GetNumAtoms()))
 
             # apply the mapping
             df["atom_id"] = df.apply(
