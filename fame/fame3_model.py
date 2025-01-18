@@ -2,11 +2,18 @@ import logging
 import os
 from glob import glob
 from tempfile import TemporaryDirectory
-from typing import List
+from typing import List, Tuple
 
 import pandas as pd
-from nerdd_module import SimpleModel
-from rdkit.Chem import Mol, MolFromSmiles, MolToSmiles, SanitizeMol, SmilesParserParams
+from nerdd_module import Problem, SimpleModel
+from rdkit.Chem import (
+    KekulizeException,
+    Mol,
+    MolFromSmiles,
+    MolToSmiles,
+    SanitizeMol,
+    SmilesParserParams,
+)
 from sh import Command
 
 from .resources import get_fame3_executable
@@ -157,9 +164,14 @@ class Fame3Model(SimpleModel):
     def __init__(self):
         super().__init__(preprocessing_steps=[])
 
-    def _preprocess(self, mol: Mol):
-        SanitizeMol(mol)
-        return mol, []
+    def _preprocess(self, mol: Mol) -> Tuple[Mol, List[Problem]]:
+        try:
+            SanitizeMol(mol)
+            return mol, []
+        except KekulizeException:
+            return None, [
+                Problem("kekulization_error", "Failed kekulizing the molecule.")
+            ]
 
     def _predict_mols(
         self, mols: List[Mol], metabolism_phase: str = "phase_1_and_2"
