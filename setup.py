@@ -13,6 +13,7 @@ setup(
     license="GNU General Public License v3.0",
     include_package_data=True,
     install_requires=[
+        "rdkit==2020.09.1",
         "pandas~=1.2.1",
         "sh~=1.14.3",
         "nerdd-module>=0.3.4",
