@@ -6,6 +6,8 @@ module:
   logo_title: Sites of Metabolism
   logo_caption: Regioselectivity prediction for phase 1 and phase 2 metabolism
   example_smiles: CN1CCN(Cc2ccc(cc2)C(=O)Nc3ccc(C)c(Nc4nccc(n4)c5cccnc5)c3)CC1 (imatinib)
+  # From experience, FAME doesn't benefit from a larger batch size. Since results are reported
+  # after each batch, we opt for a small batch size of 5.
   batch_size: 5
 
   title: Prediction of Phase 1 and Phase 2 Sites of Metabolism (SoMs)

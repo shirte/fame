@@ -38,12 +38,10 @@ def setup_file(filename, sub_dir=None):
 
 def get_fame3_executable():
     # copy the fame3 executable to the user data directory
-    fame3_executable_name = os.path.join(here, "fame3")
     fame3_jar_name = os.path.join(here, "fame3-server-0.0.0.dev7_server9.jar")
 
     lib_files = glob(os.path.join(here, "libs", "*"))
     for lib_file in lib_files:
         setup_file(lib_file, "libs")
 
-    setup_file(fame3_jar_name)
-    return setup_file(fame3_executable_name)
+    return setup_file(fame3_jar_name)

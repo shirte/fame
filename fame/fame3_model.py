@@ -7,7 +7,7 @@ from typing import List, Tuple
 import pandas as pd
 from nerdd_module import Problem, SimpleModel
 from rdkit.Chem import KekulizeException, Mol, SanitizeMol, SDWriter
-from sh import Command
+from sh import java
 
 from .resources import get_fame3_executable
 
@@ -18,11 +18,12 @@ logger = logging.getLogger(__name__)
 # Predicts the site of metabolism for a given molecule or a set of molecules.
 # mode: one of ['P1', 'P1+P2', 'P2']
 
-# wrap FAME3 binary as a Python function
-# r=4: number of processes (note: I suspect that Fame ignores this parameter)
-# c=True: output csv
-fame3 = Command(get_fame3_executable()).bake(r=4, c=True)
-
+# Wrap FAME3 jar in a Python function. Our goal is to execute a command like this:
+#   java -jar fame3-server-0.0.0.dev7_server9.jar -r 6 -c -m P1+P2 input.sdf -o output_dir
+# The following arguments are constant and so we bake them into the command:
+#   r=6: number of processes; FAME can't use more than 6 cores efficiently
+#   c=True: output csv
+fame3 = java.bake("-jar", get_fame3_executable(), r=6, c=True)
 
 default_columns = [
     "mol_id",
