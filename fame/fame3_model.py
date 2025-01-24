@@ -25,16 +25,6 @@ logger = logging.getLogger(__name__)
 #   c=True: output csv
 fame3 = java.bake("-jar", get_fame3_executable(), r=6, c=True)
 
-default_columns = [
-    "mol_id",
-    "atom",
-    "atom_id",
-    "is_som",
-    "ad_score",
-    "probability_0",
-    "probability_1",
-]
-
 
 def predict_mols(mols: List[Mol], mode="P1+P2") -> List[dict]:
     with TemporaryDirectory() as tmp_dir:
@@ -72,7 +62,7 @@ def predict_mols(mols: List[Mol], mode="P1+P2") -> List[dict]:
         # ├── results.html
         # └── results.zip
         #
-        # We are only interested in the contents of the _basic.csv files:
+        # We are only interested in the contents of the *_basic.csv files:
         result_files = glob(os.path.join(output_dir, "**/*_basic.csv"), recursive=True)
 
         if len(result_files) > 0:
@@ -105,18 +95,15 @@ def predict_mols(mols: List[Mol], mode="P1+P2") -> List[dict]:
             for col in ["probability_0", "probability_1", "ad_score"]:
                 df[col] = df[col].round(3)
 
-            # filter and reorder columns
-            df = df[default_columns]
+            # fix types
+            df.mol_id = df.mol_id.astype(int)
+            df.ad_score = df.ad_score.astype(float)
+            df.probability_0 = df.probability_0.astype(float)
+            df.probability_1 = df.probability_1.astype(float)
+
+            return df.to_dict(orient="records")
         else:
-            df = pd.DataFrame(columns=default_columns)
-
-        # fix types
-        df.mol_id = df.mol_id.astype(int)
-        df.ad_score = df.ad_score.astype(float)
-        df.probability_0 = df.probability_0.astype(float)
-        df.probability_1 = df.probability_1.astype(float)
-
-        return df.to_dict(orient="records")
+            return []
 
 
 class Fame3Model(SimpleModel):
