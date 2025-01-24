@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="fame",
-    version="3.1.1",
+    version="3.1.2",
     maintainer="Johannes Kirchmair",
     maintainer_email="johannes.kirchmair@univie.ac.at",
     packages=find_packages(),
