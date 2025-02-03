@@ -1,1 +1,8 @@
-.
+importlib_metadata==8.6.1
+nerdd_module==0.3.34
+pandas==1.2.5
+platformdirs==4.3.7
+rdkit==2020.09.1
+setuptools==75.8.2
+sh==1.14.3
+nerdd_link==0.2.19
