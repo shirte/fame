@@ -155,24 +155,50 @@ module:
       type: float
       sortable: True
       level: atom
-      palette: fameOrange
       format: .2f
+      color_palette:
+        type: sequential
+        domain:
+          - 0
+          - 1
+        range:
+          - neutral
+          - positive
     - name: probability_1
       visible_name: 1-Probability
       visible: False
       type: float
       sortable: True
       level: atom
-      palette: fameOrange
       format: .2f
+      color_palette:
+        type: sequential
+        domain:
+          - 0
+          - 1
+        range:
+          - neutral
+          - positive
     - name: is_som
       visible_name: SOM
       type: bool
       sortable: True
       level: atom
+      color_palette:
+        range:
+          - negative
+          - positive
     - name: ad_score
       visible_name: Fame score
       type: float
       sortable: True
       level: atom
       format: .2f
+      color_palette:
+        type: sequential
+        domain:
+          - 0
+          - 1
+        range:
+          - neutral
+          - positive
