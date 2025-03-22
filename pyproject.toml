@@ -21,7 +21,7 @@ dependencies = [
     "rdkit==2020.09.1",
     "pandas~=1.2.1",
     "sh~=1.14.3",
-    "nerdd-module>=0.3.34",
+    "nerdd-module>=0.3.36",
     "platformdirs>=4",
     "importlib-resources>=5; python_version<'3.9'",
     "importlib_metadata>=4.6; python_version<'3.10'",
