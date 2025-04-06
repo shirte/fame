@@ -42,15 +42,9 @@ RUN micromamba run -p /env pip install --no-deps .
 FROM python:3.9-slim
 # FROM gcr.io/distroless/base:nonroot
 
-# TODO: remove
-ENV KAFKA_BROKER_URL=$KAFKA_BROKER_URL
 ENV PATH="/env/bin:$PATH"
 
 # copy the environment from the build stage
 COPY --from=build /env /env
 
-CMD [ \
-    # TODO: remove
-    "/bin/sh", "-c", \
-    "/env/bin/nerdd_prediction_server fame.Fame3Model --broker-url $KAFKA_BROKER_URL --data-dir /data" \
-    ]
+ENTRYPOINT ["/env/bin/fame3"]
