@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v0.0.2 (2025-05-21)
+
+### Code Style
+
+* style: Use pytest-watcher instead of pytest-watch ([`edde524`](https://github.com/molinfo-vienna/fame/commit/edde524ec70186137fab934821ae9a24ba849801))
+
+* style: Add pytest config to pyproject.toml ([`227acbd`](https://github.com/molinfo-vienna/fame/commit/227acbdf3c6aaf2eae168e45d7a2ca6f64bac2d6))
+
+### Fixes
+
+* fix: Bump versions of dependencies ([`0be8be6`](https://github.com/molinfo-vienna/fame/commit/0be8be6a7ab425fdeacb527334cc48628b49e810))
+
+* fix: Update setuptools dependency ([`d39d6a0`](https://github.com/molinfo-vienna/fame/commit/d39d6a0e408ad663d5e4d38a08879c57f1896c77))
+
+### Unknown
+
+* Merge pull request #13 from shirte/main
+
+Update setuptools dependency ([`64197f5`](https://github.com/molinfo-vienna/fame/commit/64197f5f07e4e15634d4a3a4f57b91ac46b2c981))
+
+* Merge pull request #12 from shirte/main
+
+Disable tests for the moment (because Fame3 is too slow) ([`1551771`](https://github.com/molinfo-vienna/fame/commit/155177110967103837f5aadefc37c57bfc7db035))
+
+* Disable tests for the moment (because Fame3 is too slow) ([`8824b1e`](https://github.com/molinfo-vienna/fame/commit/8824b1e3f3d8c7fbcae3693cefd7fa1d3f948a56))
+
+
 ## v0.0.1 (2025-04-01)
 
 ### Fixes
